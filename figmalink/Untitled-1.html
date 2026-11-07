@@ -1,0 +1,612 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="theme-color" content="#f7f4ec">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="default">
+	<meta name="apple-mobile-web-app-title" content="MadeForU">
+	<link rel="manifest" href="/manifest.webmanifest">
+	<link rel="icon" href="/icon.svg" type="image/svg+xml">
+	<script id="google-identity" src="https://accounts.google.com/gsi/client" async defer></script>
+	<title>MadeForU — Local Crafts, Personal Moments</title>
+	<style>
+		:root {
+			--paper:#f7f4ec; --white:#fff; --gold:#b48617; --gold-dark:#8c6912;
+			--gold-light:#eadbb1; --ink:#171612; --muted:#858078; --line:#dedbd3;
+			--green:#42c769; --shadow:0 4px 10px #27201420; --shell:480px;
+		}
+		*{box-sizing:border-box}
+		[hidden]{display:none!important}
+		body{margin:0;background:#e8e5de;color:var(--ink);font:15px/1.45 "Segoe UI",Arial,sans-serif}
+		button,input,textarea,select{font:inherit}
+		button{color:inherit}
+		.app{position:relative;max-width:var(--shell);min-height:100vh;margin:0 auto;background:var(--paper);overflow:hidden;padding-bottom:86px}
+		.statusbar{height:36px;padding:8px 20px 2px;display:flex;justify-content:space-between;font-size:13px;font-weight:600;background:var(--paper)}
+		.status-icons{letter-spacing:2px}
+		.topbar{min-height:54px;padding:5px 18px 10px;display:flex;align-items:center;gap:12px;background:var(--paper)}
+		.topbar h1{font-size:23px;margin:0;text-align:center;flex:1;line-height:1.15;font-weight:700}
+		.back{border:0;background:none;color:var(--gold);font-size:32px;line-height:1;padding:0 3px;cursor:pointer}
+		.header-action{border:1px solid var(--gold);border-radius:11px;background:white;padding:7px 10px;color:var(--gold-dark);font-size:12px}
+		.content{padding:10px 20px 28px}
+		.content.tight{padding-left:14px;padding-right:14px}
+		.home-head{margin:-54px -20px 28px;padding:12px 20px 14px;border-radius:0 0 29px 29px;background:linear-gradient(155deg,#c39a25,#a47c13 72%,#533d0a);color:white}
+		.welcome-row{display:flex;align-items:center;gap:10px}
+		.avatar{width:62px;height:62px;border-radius:50%;display:grid;place-items:center;flex:none;border:2px solid #fff;background:radial-gradient(circle at 48% 32%,#f0c2a8 0 19%,transparent 20%),radial-gradient(ellipse at 50% 88%,#544234 0 35%,transparent 36%),linear-gradient(140deg,#d9b795,#796251);color:transparent;overflow:hidden}
+		.welcome-name{font-family:Georgia,serif;font-size:19px;color:#fff4d8}
+		.welcome-greet{font-weight:700;font-size:16px;margin-top:3px}
+		.notice{margin-left:auto;border:0;border-radius:50%;width:46px;height:46px;background:#fff9e9;font-size:23px;position:relative}
+		.notice small{position:absolute;right:4px;top:3px;color:#e22;background:white;border-radius:50%;font-size:9px;padding:1px 4px}
+		.searchline{display:flex;gap:12px;margin:21px 2px -29px}
+		.searchbox{height:51px;display:flex;align-items:center;gap:9px;padding:0 14px;border-radius:12px;border:1px solid #f7e9c2;background:#ffffff20;flex:1}
+		.searchbox input{width:100%;border:0;outline:0;background:none;color:inherit;font-size:14px}
+		.searchbox input::placeholder{color:inherit;opacity:.95}
+		.filter-button{width:49px;border:1px solid white;border-radius:10px;color:white;background:transparent;font-size:25px}
+		.promo{position:relative;min-height:216px;margin:0 -4px 22px;padding:19px 22px;border-radius:15px;overflow:hidden;background:linear-gradient(100deg,#fae8d4,#f6dfc6 56%,#f9eee2);color:#654a19}
+		.promo:after{content:"🎁";position:absolute;right:17px;top:39px;font-size:95px;filter:drop-shadow(0 10px 7px #805a2944);transform:rotate(8deg)}
+		.promo:before{content:"✦  ♡  ✦";position:absolute;right:20px;bottom:15px;color:#d4a449;font-size:23px}
+		.promo-tag{display:inline-block;background:#d9af66;border-radius:12px;padding:5px 10px;color:white;font-size:10px;letter-spacing:1px;font-weight:700}
+		.promo h2{font: bold 27px/1.08 Georgia,serif;margin:11px 0 8px;max-width:235px}
+		.promo p{font-size:13px;max-width:220px;margin:0 0 12px;color:#5e5547}
+		.promo button{border:0;border-radius:20px;background:#a47a17;color:white;padding:9px 16px;font-size:12px;box-shadow:var(--shadow)}
+		.section-title{display:flex;align-items:center;justify-content:space-between;margin:19px 0 12px}
+		.section-title h2{font:21px Georgia,serif;margin:0}
+		.section-title button{border:0;background:none;color:var(--gold-dark);text-decoration:underline}
+		.category-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:15px 0 19px;text-align:center}
+		.category{border:0;background:transparent;padding:0;display:grid;justify-items:center;gap:4px;color:#51432c;font:12px/1.15 Georgia,serif;cursor:pointer}
+		.category-icon{width:58px;height:58px;border-radius:50%;background:#efe5c8;display:grid;place-items:center;color:var(--gold-dark);font-size:27px;box-shadow:0 3px 4px #0002}
+		.occasion-grid{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+		.occasion{height:98px;border:0;border-radius:18px;background:linear-gradient(110deg,#f0e2ba 0 55%,#ead6b2);box-shadow:var(--shadow);overflow:hidden;position:relative;text-align:left;padding:13px 10px;color:#77530d;font:18px Georgia,serif;cursor:pointer}
+		.occasion:after{content:attr(data-flower);position:absolute;right:-3px;top:-2px;bottom:0;width:46%;display:grid;place-items:center;background:linear-gradient(120deg,#d8d1c5,#f5e1d1);border-radius:43% 0 0 43%;font-size:44px}
+		.add-bubble{position:absolute;bottom:8px;left:10px;width:23px;height:23px;background:#a77d18;border-radius:50%;color:white;text-align:center;font:20px/23px Arial}
+		.pill-row{display:flex;gap:9px;overflow-x:auto;margin:8px -20px 14px;padding:4px 20px 8px;scrollbar-width:none}
+		.pill{white-space:nowrap;border:1px solid var(--line);border-radius:22px;background:#fff;padding:9px 16px;font-size:13px;box-shadow:0 2px 3px #0001;cursor:pointer}
+		.pill.active{background:var(--gold);border-color:var(--gold);color:white}
+		.product-grid{display:grid;grid-template-columns:1fr 1fr;gap:13px 14px}
+		.product-card{border:0;border-radius:18px;background:white;padding:9px 9px 12px;box-shadow:var(--shadow);text-align:left;overflow:hidden;cursor:pointer}
+		.product-photo{height:154px;margin:-1px -1px 7px;border-radius:14px;background:var(--tone,#f3e7d2);display:grid;place-items:center;position:relative;overflow:hidden}
+		.product-photo:before,.product-photo:after{content:"";position:absolute;border-radius:50%;width:132px;height:132px;border:1px solid #ffffff99}
+		.product-photo:after{width:170px;height:170px}
+		.bloom{font-size:71px;position:relative;z-index:1;filter:drop-shadow(0 6px 5px #57412b44)}
+		.product-title{font:18px/1.15 Georgia,serif;text-align:center;margin:3px 0 6px;min-height:40px}
+		.product-price{font-size:14px;margin:3px 0}
+		.product-foot{display:flex;align-items:center;justify-content:space-between;font-size:12px;color:#777}
+		.product-status{border-radius:6px;padding:4px 7px;background:var(--gold);color:#fff;font-size:10px}
+		.product-status.green{background:#42c769}
+		.rating{font-size:12px;color:#514b40}
+		.page-heading{font-size:23px;margin:5px 0 15px}
+		.subheading{color:var(--muted);font-size:13px;margin:-9px 0 17px}
+		.order-tabs{display:grid;grid-template-columns:repeat(3,1fr);margin:0 -6px 16px;background:white;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+		.order-tabs button{border:0;background:transparent;padding:12px 4px;color:#888;font-size:13px;font-weight:700}
+		.order-tabs button.active{color:var(--gold);border-bottom:2px solid var(--gold)}
+		.order-list{display:grid;gap:14px}
+		.order-card{display:grid;grid-template-columns:82px 1fr auto;align-items:center;gap:12px;background:white;border-radius:22px;padding:11px 12px;min-height:112px}
+		.order-thumb{height:82px;border-radius:13px;background:#f0e4d7;display:grid;place-items:center;font-size:42px}
+		.order-info{font-size:13px;min-width:0}
+		.order-info strong{display:block;font-weight:500;margin-bottom:3px}
+		.order-info p{margin:1px 0;color:#777}
+		.order-state{display:inline-block;background:var(--gold);color:white;border-radius:5px;padding:4px 8px;margin-top:5px;font-size:12px}
+		.order-state.ready{background:var(--green)}
+		.outline-btn{border:1px solid var(--gold);color:var(--gold-dark);background:var(--paper);border-radius:6px;padding:6px 12px;font-size:12px}
+		.detail-hero{height:345px;margin:-10px -20px 17px;background:linear-gradient(135deg,#d5c1a8,#f1e4d5);display:grid;place-items:center;position:relative}
+		.detail-hero .bloom{font-size:155px}
+		.round-action{position:absolute;top:14px;width:45px;height:45px;border:0;border-radius:50%;background:white;font-size:24px;box-shadow:var(--shadow)}
+		.round-action.left{left:10px}.round-action.right{right:10px}
+		.detail-title{font-size:24px;margin:4px 0}
+		.detail-price{color:var(--gold-dark);font-weight:700;font-size:20px}
+		.detail-line{display:flex;justify-content:space-between;align-items:center;margin:8px 0}
+		.maker-row{display:flex;align-items:center;gap:10px;margin:20px 0}
+		.maker-row .avatar{width:56px;height:56px;border-color:var(--gold)}
+		.maker-row button{margin-left:auto;border:1px solid var(--gold);background:transparent;color:var(--gold-dark);font-size:11px}
+		.description{color:#555;line-height:1.6;margin:18px 4px}
+		.quantity{display:flex;align-items:center;gap:12px}
+		.quantity button{width:28px;height:28px;border:1px solid var(--gold);background:#fff}
+		.primary-btn{width:100%;border:0;background:var(--gold);color:white;border-radius:28px;padding:14px 18px;font-size:17px;font-weight:700;cursor:pointer}
+		.primary-btn:hover{background:var(--gold-dark)}
+		.secondary-btn{width:100%;border:1px solid var(--gold);background:white;color:var(--gold-dark);border-radius:28px;padding:13px 10px;font-size:14px;font-weight:700;cursor:pointer}
+		.detail-actions{display:grid;grid-template-columns:1fr 1.25fr;gap:8px}
+		.footer-action{position:sticky;bottom:0;background:var(--paper);padding:12px 20px calc(13px + env(safe-area-inset-bottom));margin:15px -20px -20px}
+		.checkout-card{background:white;border-radius:26px;padding:20px;margin:0 0 17px}
+		.checkout-card h2{font-size:21px;margin:0 0 7px}
+		.summary-line{display:flex;justify-content:space-between;margin:8px 0}
+		.summary-line.total{border-top:1px solid var(--line);padding-top:12px;font-size:21px;font-weight:700}
+		.choice-row{display:flex;gap:12px;margin:15px 0 4px}
+		.choice{border:1px solid #555;background:white;padding:9px;border-radius:0;flex:1}
+		.choice.selected{border-color:var(--gold);color:var(--gold-dark);background:#fffaf0}
+		.radio-list{display:grid;gap:10px;margin-top:12px}
+		.radio-list label{display:flex;align-items:center;gap:9px}
+		input[type=radio]{accent-color:var(--gold)}
+		.success-card{margin:28vh 4px 0;background:white;border:1px solid var(--gold);border-radius:23px;padding:30px;text-align:center}
+		.success-mark{font-size:64px;color:var(--gold)}
+		.success-card h2{color:var(--gold);font-size:29px;margin:0 0 22px}
+		.progress-title{display:flex;gap:11px;align-items:center;margin:0 -4px 20px}
+		.progress-title .back{font-size:32px}
+		.progress{display:grid;grid-template-columns:repeat(6,1fr);margin:12px 2px 27px;position:relative}
+		.progress:before{content:"";height:1px;background:#8e8879;position:absolute;top:14px;left:10%;right:10%}
+		.progress span{position:relative;justify-self:center;width:29px;height:29px;border:1px solid var(--gold);border-radius:50%;background:white;text-align:center;font-weight:700;line-height:27px}
+		.progress span.active{background:var(--gold);color:white}
+		.builder-options{display:grid;grid-template-columns:1fr 1fr;gap:20px 22px;margin:75px 0 50px}
+		.builder-option{border:1px solid var(--gold);background:white;min-height:160px;padding:0;display:grid;place-items:center;cursor:pointer}
+		.builder-option.selected{outline:3px solid #b4861740}
+		.builder-option .bloom{font-size:78px}
+		.color-option{width:100px;height:100px;border-radius:50%;background:var(--swatch);border:8px solid white;box-shadow:0 0 0 1px var(--gold);justify-self:center}
+		.builder-label{text-align:center;margin-top:-17px}
+		.flower-color-filters{display:flex;flex-wrap:wrap;gap:12px;margin:12px 0}
+		.flower-color{display:grid;justify-items:center;gap:5px;border:0;background:transparent;font-size:11px;cursor:pointer}
+		.flower-color i{width:34px;height:34px;border-radius:50%;background:var(--swatch);border:2px solid white;box-shadow:0 0 0 1px var(--line)}
+		.flower-color.active i{box-shadow:0 0 0 2px var(--gold)}
+		.detail-seller{border-top:1px solid var(--line);margin-top:15px;padding-top:12px}
+		.detail-seller p{margin:5px 0;color:#615b50}
+		.google-signin{min-height:44px;display:grid;place-items:center;margin:18px auto}
+		.google-hint{font-size:12px;color:#777;text-align:center;line-height:1.55}
+		.signin-logo{text-align:center;color:var(--gold-dark);font:32px Georgia,serif;margin:38px 0 12px}
+		.auth-card{margin-top:10px;padding:20px;background:#fff;border-radius:22px}
+		.role-picker{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0}
+		.role-choice{padding:10px;border:1px solid var(--gold);border-radius:11px;background:white}
+		.role-choice.active{background:var(--gold);color:white}
+		.builder-footer{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:min(100%,var(--shell));display:flex;padding:12px 20px calc(15px + env(safe-area-inset-bottom));background:var(--paper);z-index:5}
+		.builder-footer button{width:50%;height:45px;border:1px solid var(--gold);font-size:16px}
+		.builder-footer .back-btn{border-radius:24px 0 0 24px;background:white}
+		.builder-footer .next-btn{border-radius:24px;background:var(--gold);color:white;margin-left:-7px}
+		.note-box{width:100%;height:150px;padding:18px;border:0;border-radius:22px;box-shadow:inset 0 2px 5px #0004;resize:vertical;font-size:15px}
+		.style-grid{display:grid;grid-template-columns:1fr 1fr;gap:28px;margin:45px 24px}
+		.style-choice{height:100px;border:1px solid var(--gold);border-radius:19px;background:white;font-size:18px;font-weight:700}
+		.style-choice.selected{background:#fff6dc}
+		.small-label{font-weight:700;margin:14px 0 8px}
+		.form{display:grid;gap:14px}
+		.form label{font-weight:600;display:grid;gap:6px}
+		.form input,.form select,.form textarea{width:100%;border:1px solid #aaa;border-radius:10px;background:white;padding:12px 14px}
+		.form textarea{min-height:95px;resize:vertical}
+		.review-card,.profile-card,.seller-card{background:white;border-radius:18px;padding:17px;margin-bottom:14px}
+		.review-stars{color:#e8a700;font-size:33px;letter-spacing:7px;margin:8px 0}
+		.profile-banner{background:linear-gradient(125deg,#4c382a,#b99468);height:114px;margin:-10px -20px 0}
+		.profile-summary{position:relative;background:white;border-radius:26px 26px 0 0;margin:-28px -20px 0;padding:16px 21px 12px;display:grid;grid-template-columns:82px 1fr;align-items:center;gap:10px}
+		.profile-summary .avatar{width:88px;height:88px}
+		.profile-stats{grid-column:1/-1;display:grid;grid-template-columns:repeat(3,1fr);text-align:center;padding:12px 0 4px;border-top:1px solid var(--line)}
+		.profile-stats div+div{border-left:1px solid var(--line)}
+		.profile-stats strong{display:block}
+		.profile-links{background:white;border:1px solid #e8dfd1;border-radius:16px;padding:0 14px}
+		.profile-link{display:flex;align-items:center;gap:13px;min-height:57px;border-bottom:1px solid #eee9e0}
+		.profile-link:last-child{border-bottom:0}
+		.profile-link .link-icon{width:28px;font-size:24px;color:#76511b}
+		.profile-link span:nth-child(2){flex:1}
+		.profile-link small{display:block;color:#8b9298;font-size:11px}
+		.profile-link button{border:0;background:transparent;font-size:20px;color:#7a6a55}
+		.metric-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+		.metric{border-radius:17px;background:#eadbb1;padding:13px 12px;min-height:104px}
+		.metric-icon{width:34px;height:34px;display:grid;place-items:center;background:var(--gold);border-radius:50%;color:white;font-size:20px}
+		.metric strong{display:block;font-size:18px;margin-top:5px}
+		.metric small{color:#71613e}
+		.chart{margin:18px -20px;background:white;padding:15px 19px;border-radius:15px}
+		.chart-bars{display:flex;align-items:end;justify-content:space-around;height:150px;border-bottom:1px solid var(--line);gap:11px}
+		.bar{flex:1;background:linear-gradient(#c49426,#a87912);border-radius:7px 7px 0 0;position:relative;min-height:22px}
+		.bar:after{content:attr(data-month);position:absolute;top:100%;width:100%;text-align:center;font-size:11px;color:#777}
+		.seller-row{display:grid;grid-template-columns:49px 1fr auto;gap:10px;align-items:center;border-bottom:1px solid #eee;padding:10px 0}
+		.seller-thumb{width:49px;height:49px;border-radius:12px;background:#eee3d7;display:grid;place-items:center;font-size:28px}
+		.seller-row small{display:block;color:#888}
+		.message{max-width:72%;padding:13px 16px;border:1px solid var(--gold);border-radius:15px;background:white;margin:15px 0;font-size:17px}
+		.message.mine{margin-left:auto;background:var(--gold);color:white;border:0}
+		.message-person{display:flex;gap:10px;align-items:center;margin:3px 0 14px}
+		.message-input{display:flex;gap:8px;margin-top:30px}
+		.message-input input{flex:1;border:1px solid var(--line);border-radius:22px;padding:10px 14px}
+		.message-input button{border:0;border-radius:50%;background:var(--gold);color:white;width:44px}
+		.bottom-nav{position:fixed;left:50%;transform:translateX(-50%);bottom:0;width:min(100%,var(--shell));height:79px;padding:7px 3px calc(7px + env(safe-area-inset-bottom));background:white;border-radius:17px 17px 0 0;box-shadow:0 -2px 10px #0000000c;display:grid;grid-template-columns:repeat(5,1fr);z-index:6}
+		.bottom-nav button{border:0;background:transparent;color:#999;display:grid;justify-items:center;align-content:center;gap:0;font-size:10px}
+		.bottom-nav button.active{color:var(--gold)}
+		.bottom-icon{font-size:26px;line-height:1.2}
+		.toast{position:fixed;z-index:20;bottom:93px;left:50%;transform:translate(-50%,15px);opacity:0;pointer-events:none;background:#24211a;color:white;border-radius:22px;padding:10px 17px;font-size:13px;transition:.2s}
+		.toast.show{opacity:1;transform:translate(-50%,0)}
+		.empty{grid-column:1/-1;text-align:center;padding:40px 15px;color:var(--muted);background:#fff;border-radius:18px}
+		@media(min-width:700px){body{padding:24px 0}.app{min-height:calc(100vh - 48px);border-radius:28px;box-shadow:0 12px 50px #28211622}.bottom-nav{bottom:24px;border-radius:17px}.builder-footer{bottom:24px}.toast{bottom:114px}}
+		@media(max-width:370px){.content{padding-left:15px;padding-right:15px}.product-photo{height:132px}.product-title{font-size:16px}.promo h2{font-size:24px}.order-card{grid-template-columns:68px 1fr auto;gap:8px}.order-thumb{height:68px}}
+	</style>
+</head>
+<body>
+	<div class="app">
+		<div class="statusbar"><span>10:30 PM</span><span class="status-icons">▮▮ ◉ ▰</span></div>
+		<header class="topbar" id="topbar"></header>
+		<main class="content" id="main"></main>
+		<nav class="bottom-nav" id="bottom-nav" aria-label="Main navigation"></nav>
+	</div>
+	<div class="toast" id="toast" role="status" aria-live="polite"></div>
+	<script>
+		const state = {
+			products: [], orders: [], profile: {}, user: null, googleClientId: '', mode: 'shop', view: 'signin',
+			query: '', category: 'All', colorFilter: 'All', stockFilter: '', orderTab: 'New Orders', selected: null,
+			authRole: 'customer', pendingView: '',
+			quantity: 1, cart: {}, checkoutItems: {}, delivery: 'Delivery', payment: 'Cash on Delivery',
+			builderStep: 1, builder: {flower:'Rose', color:'Pink', productId:'', alignment:'Medium', wrapper:'Pink', ribbon:'Pink', message:'', style:'Classic'},
+			messages: []
+		};
+		const main = document.getElementById('main');
+		const topbar = document.getElementById('topbar');
+		const bottomNav = document.getElementById('bottom-nav');
+		let toastTimer;
+		const customerNav = [['home','⌂','Home'],['search','⌕','Search'],['orders','▤','Orders'],['cart','🛒','Cart'],['profile','♙','Profile']];
+		const sellerNav = [['seller-dashboard','▦','Dashboard'],['seller-products','▤','Product'],['seller-orders','☷','Orders'],['messages','●','Messages'],['seller-profile','♟','Profile']];
+		const colorSwatches = {Red:'#e64242',Pink:'#ec91a9',White:'#fff',Yellow:'#f5ce42',Purple:'#9b69b4',Blue:'#739bd5',Orange:'#ef984a',Mixed:'linear-gradient(135deg,#ed5b5b,#f0d54e,#7c6dcc)'};
+		const colorTints = {Red:'#f2d5d3',Pink:'#f4dce4',White:'#f0eee8',Yellow:'#f5edcf',Purple:'#e8dff0',Blue:'#dce7f3',Orange:'#f4e1d3',Mixed:'#eee3d7'};
+		const flowerEmoji = {Rose:'🌹',Tulip:'🌷',Sunflower:'🌻',Lily:'🌸',Carnation:'🌸',Daisy:'🌼',Orchid:'🪷','Mixed Bouquet':'💐'};
+		function flowerTint(name){return colorTints[name]||'#f5eee4';}
+		function escapeHtml(value) {
+			return String(value ?? '').replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+		}
+		function peso(cents) {
+			return '₱ ' + (Number(cents || 0) / 100).toLocaleString('en-PH', {minimumFractionDigits:0, maximumFractionDigits:2});
+		}
+		function notify(message) {
+			const toast = document.getElementById('toast');
+			toast.textContent = message;
+			toast.classList.add('show');
+			clearTimeout(toastTimer);
+			toastTimer = setTimeout(() => toast.classList.remove('show'), 2600);
+		}
+		async function api(path, values) {
+			const response = await fetch(path, {
+				method: values ? 'POST' : 'GET',
+				headers: values ? {'Content-Type':'application/x-www-form-urlencoded;charset=UTF-8'} : {},
+				body: values ? new URLSearchParams(values) : undefined
+			});
+			const data = await response.json();
+			if (!response.ok) throw new Error(data.message || 'The request could not be completed.');
+			return data;
+		}
+		async function refresh() {
+			try {
+				const data = await api('/api/state');
+				state.products = data.products;
+				state.orders = data.orders;
+				state.profile = data.profile || {};
+				const [config, auth] = await Promise.all([api('/api/auth/config'),api('/api/auth/me')]);
+				state.googleClientId = config.googleClientId || '';
+				state.user = auth.user;
+				state.mode = state.user?.role === 'seller' ? 'seller' : 'shop';
+				if (state.user && state.view === 'signin') state.view = state.user.role === 'seller' ? 'seller-dashboard' : 'home';
+				render();
+				if (state.view === 'signin') renderGoogleButton();
+			} catch (error) {
+				topbar.innerHTML = '<h1>MadeForU</h1>';
+				main.innerHTML = `<div class="empty"><strong>We couldn’t connect to the shop.</strong><p>${escapeHtml(error.message)}</p><button class="primary-btn" id="retry">Try again</button></div>`;
+				document.getElementById('retry').onclick = refresh;
+			}
+		}
+		function setView(view) {
+			const sellerView = view.startsWith('seller-') || view === 'messages' || view === 'add-product';
+			const needsCustomer = ['orders','checkout','profile'].includes(view);
+			if ((view !== 'signin' && !state.user)
+					|| (sellerView && state.user?.role !== 'seller')
+					|| (needsCustomer && state.user?.role !== 'customer')) {
+				state.authRole = sellerView ? 'seller' : 'customer';
+				state.pendingView = view;
+				view = 'signin';
+			}
+			state.view = view;
+			if (sellerView) state.mode = 'seller';
+			else if (view !== 'checkout' && view !== 'details' && view !== 'builder' && view !== 'success') state.mode = 'shop';
+			render();
+			window.scrollTo(0, 0);
+		}
+		function header(title, back = '', action = '') {
+			topbar.innerHTML = `${back ? `<button class="back" data-back="${escapeHtml(back)}" aria-label="Go back">‹</button>` : '<span style="width:28px"></span>'}<h1>${title}</h1>${action}`;
+			const button = topbar.querySelector('[data-back]');
+			if (back) button.onclick = () => setView(back);
+		}
+		function drawNav() {
+			const links = state.mode === 'seller' ? sellerNav : customerNav;
+			bottomNav.hidden = ['builder','checkout','success','signin'].includes(state.view);
+			bottomNav.innerHTML = links.map(([view, icon, label]) => `<button type="button" class="${state.view === view ? 'active' : ''}" data-view="${view}"><span class="bottom-icon">${icon}</span>${label}</button>`).join('');
+			bottomNav.querySelectorAll('[data-view]').forEach(button => button.onclick = () => {
+				if (button.dataset.view === 'cart') return openCart();
+				setView(button.dataset.view);
+			});
+		}
+		function bloomFor(product) { return escapeHtml(product.emoji || '💐'); }
+		function avatarMarkup(user, fallback = '✿') {
+			const picture = user?.picture && /^https:\/\/[^"'<>]+$/i.test(user.picture)
+				? `<img src="${escapeHtml(user.picture)}" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`
+				: escapeHtml((user?.name || fallback).slice(0,1).toUpperCase());
+			return `<div class="avatar">${picture}</div>`;
+		}
+		function renderGoogleButton() {
+			const mount = document.getElementById('google-button');
+			if (!mount || state.view !== 'signin') return;
+			mount.innerHTML = '';
+			if (!state.googleClientId) {
+				mount.innerHTML = '<p class="google-hint"><strong>Google sign-in needs setup.</strong><br>Create an OAuth 2.0 Web client in <a href="https://console.cloud.google.com/auth/clients" target="_blank" rel="noopener noreferrer">Google Cloud Console</a>, authorize <code>http://localhost:8080</code>, then restart the Java server with its client ID in <code>GOOGLE_CLIENT_ID</code>. Never enter or share your Google password with this app.</p>';
+				return;
+			}
+			if (!window.google?.accounts?.id) {
+				const script = document.getElementById('google-identity');
+				if (script) {
+					script.addEventListener('load', renderGoogleButton, {once:true});
+					script.addEventListener('error',()=>{mount.innerHTML='<p class="google-hint">Google sign-in could not load. Check your internet connection and reload the page.</p>';},{once:true});
+				}
+				return;
+			}
+			window.google.accounts.id.initialize({
+				client_id:state.googleClientId,
+				callback:async response=>{
+					try {
+						const result=await api('/api/auth/google',{credential:response.credential,role:state.authRole});
+						state.user=result.user;
+						state.mode=state.user.role==='seller'?'seller':'shop';
+						const destination=state.pendingView || (state.user.role==='seller'?'seller-dashboard':'home');
+						state.pendingView='';
+						setView(destination);
+						notify(`Signed in as ${state.user.name}.`);
+					} catch(error) { notify(error.message); }
+				}
+			});
+			window.google.accounts.id.renderButton(mount,{
+				type:'standard',theme:'outline',size:'large',shape:'pill',
+				text:'continue_with',width:Math.min(320,Math.max(230,window.innerWidth-80))
+			});
+		}
+		function renderSignIn() {
+			header('Sign in');
+			main.innerHTML=`<div class="signin-logo">MadeForU</div><div style="text-align:center"><h2 style="margin:0">Welcome to MadeForU</h2><p class="subheading" style="margin:5px 0 16px">Sign in to continue to handmade, fresh flowers</p></div><section class="auth-card"><h3 style="margin:0">Continue with your Google account</h3><div class="role-picker"><button class="role-choice ${state.authRole==='customer'?'active':''}" data-role="customer">Shop for flowers</button><button class="role-choice ${state.authRole==='seller'?'active':''}" data-role="seller">Sell fresh flowers</button></div><div class="google-signin" id="google-button"></div><p class="google-hint">Sign in with your own Google account. No account is pre-created for you.</p></section>`;
+			main.querySelectorAll('[data-role]').forEach(button=>button.onclick=()=>{state.authRole=button.dataset.role;renderSignIn();renderGoogleButton();});
+			renderGoogleButton();
+		}
+		function productCard(product) {
+			const tone = escapeHtml(flowerTint(product.flowerColor));
+			return `<button class="product-card" type="button" data-product="${escapeHtml(product.id)}">
+				<span class="product-photo" style="--tone:${tone};background:linear-gradient(135deg,${tone},#fff)"><span class="bloom" style="filter:drop-shadow(0 6px 5px #57412b44)">${bloomFor(product)}</span></span>
+				<span class="product-title">${escapeHtml(product.name)}</span><span class="product-price">${peso(product.priceCents)}</span>
+				<span class="product-foot"><span><i style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${escapeHtml(colorSwatches[product.flowerColor] || '#ddd')};border:1px solid #bbb"></i> ${escapeHtml(product.flowerColor || '')} · ${escapeHtml(product.category || '')}</span><span class="product-status green">Fresh</span></span>
+			</button>`;
+		}
+		function renderHome() {
+			header('');
+			topbar.classList.add('home-top');
+			const categories = [['🌹','Rose'],['🌷','Tulip'],['🌻','Sunflower'],['💐','Mixed Bouquet']];
+			const occasions = [['Birthday','💐'],['Graduation','🌻'],['Valentines','🌷'],['Graduation','🌹']];
+			main.className = 'content';
+			main.innerHTML = `<section class="home-head">
+				<div class="welcome-row">${avatarMarkup(state.user,'M')}<div><div class="welcome-name">MadeForU</div><div class="welcome-greet">${state.user?`Welcome, ${escapeHtml(state.user.name)}`:'Fresh flowers, handmade for you'}</div></div><button class="notice" id="account-open" aria-label="${state.user?'Open account':'Sign in'}">♙</button></div>
+				<div class="searchline"><label class="searchbox"><span>⌕</span><input id="home-search" placeholder="Search flowers, colors, and makers"></label><button class="filter-button" data-view="search" aria-label="Open filters">☷</button></div>
+			</section>
+			<section class="promo"><span class="promo-tag">✿ &nbsp; HANDMADE &amp; FRESH</span><h2>Fresh Flowers<br>Made for You</h2><p>Shop hand-tied bouquets from local flower makers.</p><button data-view="search">Shop fresh flowers &nbsp;→</button></section>
+			<div class="category-grid">${categories.map(([icon,name]) => `<button class="category" data-category="${escapeHtml(name)}"><span class="category-icon">${icon}</span><span>${name}</span></button>`).join('')}</div>
+			<div class="section-title"><h2>Handmade &amp; fresh near you</h2><button data-view="search">See all</button></div>
+			<div class="product-grid">${state.products.slice(0,4).map(productCard).join('')}</div>
+			<div class="section-title"><h2>Create a bouquet</h2></div>
+			<div class="occasion-grid">${occasions.map(([name,flower]) => `<button class="occasion" data-flower="${flower}" data-builder="1">${name}<span class="add-bubble">+</span></button>`).join('')}</div>`;
+			document.getElementById('home-search').addEventListener('keydown', event => { if (event.key === 'Enter') { state.query = event.target.value; setView('search'); } });
+			document.getElementById('account-open').onclick = () => setView('profile');
+			main.querySelector('[data-view="search"]').onclick = () => setView('search');
+			main.querySelector('.section-title button[data-view="search"]').onclick=()=>setView('search');
+			main.querySelectorAll('[data-category]').forEach(button => button.onclick = () => { state.category = button.dataset.category; setView('search'); });
+			main.querySelectorAll('[data-builder]').forEach(button => button.onclick = () => {state.builder.flower=button.dataset.flower==='🌻'?'Sunflower':button.dataset.flower==='🌷'?'Tulip':button.dataset.flower==='🌹'?'Rose':'Mixed Bouquet';state.builderStep=1;setView('builder');});
+			main.querySelectorAll('[data-product]').forEach(button=>button.onclick=()=>openProduct(button.dataset.product));
+		}
+		function renderSearch() {
+			header('Bouquets', 'home');
+			const types=['All',...new Set(state.products.map(product=>product.flowerType || product.category))];
+			const colors=['All',...new Set(state.products.map(product=>product.flowerColor).filter(Boolean))];
+			const products = state.products.filter(product => {
+				const text = [product.name,product.description,product.category,product.maker,product.flowerColor,product.flowerType].join(' ').toLowerCase();
+				const queryMatch = !state.query || text.includes(state.query.toLowerCase());
+				const categoryMatch = state.category === 'All' || (product.flowerType || product.category) === state.category;
+				const colorMatch = state.colorFilter === 'All' || product.flowerColor === state.colorFilter;
+				return queryMatch && categoryMatch && colorMatch && product.stock > 0 && product.handmade;
+			});
+			main.innerHTML = `<div class="pill-row">${types.map(name => `<button class="pill ${state.category===name?'active':''}" data-type="${escapeHtml(name)}">${escapeHtml(name)}</button>`).join('')}</div><p class="small-label">Flower color</p><div class="flower-color-filters">${colors.map(name=>`<button class="flower-color ${state.colorFilter===name?'active':''}" data-color="${escapeHtml(name)}"><i style="--swatch:${name==='All'?'#fff':colorSwatches[name]||'#fff'}"></i>${escapeHtml(name)}</button>`).join('')}</div><div class="product-grid">${products.length ? products.map(productCard).join('') : '<div class="empty">No fresh handmade flowers match those filters yet.</div>'}</div>`;
+			main.querySelectorAll('[data-type]').forEach(button => button.onclick = () => { state.category=button.dataset.type; renderSearch(); });
+			main.querySelectorAll('[data-color]').forEach(button => button.onclick = () => { state.colorFilter=button.dataset.color; renderSearch(); });
+			main.querySelectorAll('[data-product]').forEach(button => button.onclick = () => openProduct(button.dataset.product));
+		}
+		function openProduct(id) {
+			state.selected = state.products.find(product => product.id === id);
+			state.quantity = 1;
+			if (!state.selected) return;
+			setView('details');
+		}
+		function renderDetails() {
+			const product = state.selected;
+			if (!product) return setView('search');
+			header('Product Details','search');
+			main.innerHTML = `<div class="detail-hero" style="background:linear-gradient(135deg,${escapeHtml(flowerTint(product.flowerColor))},#d0b89b)"><button class="round-action left" data-back="search">‹</button><span class="bloom">${bloomFor(product)}</span></div>
+				<h2 class="detail-title">${escapeHtml(product.name)}</h2><div class="detail-line"><span class="detail-price">${peso(product.priceCents)}</span><span class="rating">⭐ 4.8</span></div>
+				<div class="detail-line"><span>🌸 ${escapeHtml(product.flowerType || product.category)} · ${escapeHtml(product.flowerColor)}</span><span class="product-status green">Fresh · ${product.stock} available</span></div>
+				<div class="maker-row">${avatarMarkup({name:product.sellerName},'F')}<div>By ${escapeHtml(product.maker)} <span style="color:var(--gold)">✿</span><small style="display:block">${escapeHtml(product.sellerLocation)}</small></div></div>
+				<p class="description">${escapeHtml(product.description)}</p><section class="detail-seller"><strong>Handmade by the seller</strong><p>Freshness: ${escapeHtml(product.freshness)}</p><p>Seller: ${escapeHtml(product.sellerName)}</p><p>Shop: ${escapeHtml(product.maker)}</p><p>Location: ${escapeHtml(product.sellerLocation)}</p><p><a href="tel:${escapeHtml(product.sellerPhone)}">${escapeHtml(product.sellerPhone)}</a></p><p><a href="mailto:${escapeHtml(product.sellerEmail)}">${escapeHtml(product.sellerEmail)}</a></p></section>
+				<div class="detail-line"><span>Fresh stems available: ${product.stock}</span><div class="quantity"><button id="minus">−</button><span id="qty">${state.quantity}</span><button id="plus">+</button></div></div>
+				<div class="footer-action"><div class="detail-actions"><button class="secondary-btn" id="add-cart">Add to Cart</button><button class="primary-btn" id="buy">Buy Now</button></div></div>`;
+			main.querySelector('[data-back]').onclick = () => setView('search');
+			document.getElementById('minus').onclick = () => { state.quantity = Math.max(1,state.quantity-1); document.getElementById('qty').textContent = state.quantity; };
+			document.getElementById('plus').onclick = () => { state.quantity = Math.min(product.stock || 99,state.quantity+1); document.getElementById('qty').textContent = state.quantity; };
+			document.getElementById('add-cart').onclick = () => { state.cart[product.id]=(state.cart[product.id]||0)+state.quantity; notify('Added to your cart.'); openCart(); };
+			document.getElementById('buy').onclick = () => { state.checkoutItems = {[product.id]:state.quantity}; setView('checkout'); };
+		}
+		function openCart() {
+			state.view='cart';
+			render();
+		}
+		function renderCart() {
+			header('Your Cart','search');
+			const lines=Object.entries(state.cart).map(([id,quantity])=>({product:state.products.find(item=>item.id===id),quantity})).filter(line=>line.product);
+			const subtotal=lines.reduce((sum,line)=>sum+line.product.priceCents*line.quantity,0);
+			main.innerHTML=`${lines.length?`<div class="order-list">${lines.map(({product,quantity})=>`<article class="order-card"><div class="order-thumb">${bloomFor(product)}</div><div class="order-info"><strong>${escapeHtml(product.name)}</strong><p>${peso(product.priceCents)}</p><div class="quantity"><button data-quantity="${escapeHtml(product.id)}" data-delta="-1">−</button><span>${quantity}</span><button data-quantity="${escapeHtml(product.id)}" data-delta="1">+</button></div></div><strong>${peso(product.priceCents*quantity)}</strong></article>`).join('')}</div><section class="checkout-card" style="margin-top:16px"><div class="summary-line"><span>Subtotal</span><strong>${peso(subtotal)}</strong></div><div class="summary-line"><span>Protection Seal</span><span>${peso(5000)}</span></div></section><div class="footer-action"><button class="primary-btn" id="cart-checkout">Continue to Checkout</button></div>`:'<div class="empty">Your cart is empty. Find a bouquet to get started.</div>'}`;
+			main.querySelectorAll('[data-quantity]').forEach(button=>button.onclick=()=>{const id=button.dataset.quantity;const next=(state.cart[id]||0)+Number(button.dataset.delta);if(next<1)delete state.cart[id];else state.cart[id]=Math.min(next,state.products.find(item=>item.id===id)?.stock||next);renderCart();});
+			const checkout=main.querySelector('#cart-checkout');
+			if(checkout)checkout.onclick=()=>{state.checkoutItems={...state.cart};setView('checkout');};
+		}
+		function renderOrders() {
+			header('Orders', 'home');
+			const tabs = ['New Orders','Preparing','Completed'];
+			const relevant = state.orders.filter(order => {
+				if (state.orderTab === 'New Orders') return ['Pending','New'].includes(order.status);
+				if (state.orderTab === 'Preparing') return ['Preparing','Out for delivery','Ready'].includes(order.status);
+				return ['Completed','Delivered'].includes(order.status);
+			});
+			main.innerHTML = `<div class="order-tabs">${tabs.map(tab => `<button class="${state.orderTab === tab?'active':''}" data-tab="${tab}">${tab} (${state.orders.filter(order => tab === 'New Orders' ? ['Pending','New'].includes(order.status) : tab === 'Preparing' ? ['Preparing','Out for delivery','Ready'].includes(order.status) : ['Completed','Delivered'].includes(order.status)).length})</button>`).join('')}</div>
+			<div class="order-list">${relevant.length ? [...relevant].reverse().map(order => `<article class="order-card"><div class="order-thumb">${escapeHtml(order.lines[0]?.emoji || '💐')}</div><div class="order-info"><strong>#${escapeHtml(order.id)}</strong><strong>${escapeHtml(order.lines.map(line=>line.name).join(', '))}</strong><p>${peso(order.totalCents)} &nbsp;·&nbsp; ${escapeHtml(order.createdAt)}</p><span class="order-state ${order.status === 'Delivered'?'ready':''}">${escapeHtml(order.status)}</span></div><button class="outline-btn" data-order="${escapeHtml(order.id)}">View</button></article>`).join('') : '<div class="empty">Your bouquets will appear here after you place an order.</div>'}</div>`;
+			main.querySelectorAll('[data-tab]').forEach(button => button.onclick = () => { state.orderTab=button.dataset.tab; renderOrders(); });
+			main.querySelectorAll('[data-order]').forEach(button => button.onclick = () => { const order=state.orders.find(item=>item.id===button.dataset.order); if(order) {state.selectedOrder=order;setView('order-detail');} });
+		}
+		function renderCheckout() {
+			header('Checkout','details');
+			const entries = Object.entries(state.checkoutItems).map(([id,quantity]) => ({product:state.products.find(item=>item.id===id),quantity})).filter(line=>line.product);
+			const subtotal = entries.reduce((sum,line)=>sum+line.product.priceCents*line.quantity,0);
+			const deliveryFee = state.delivery === 'Delivery' ? 10000 : 0;
+			const protection = 5000;
+			const total = subtotal + deliveryFee + protection;
+			main.innerHTML = `<form id="checkout-form">
+				<section class="checkout-card"><h2>Order Summary</h2>${entries.map(line=>`<div class="detail-line"><span>${escapeHtml(line.product.emoji)} &nbsp;${escapeHtml(line.product.name)} × ${line.quantity}</span><span>${peso(line.product.priceCents*line.quantity)}</span></div>`).join('')}
+					<div class="summary-line"><span>Protection Seal</span><span>${peso(protection)}</span></div><div class="summary-line"><span>Delivery</span><span>${peso(deliveryFee)}</span></div><div class="summary-line total"><span>Total</span><span>${peso(total)}</span></div></section>
+				<section class="checkout-card"><h2>Delivery Method</h2><div class="choice-row"><button type="button" class="choice ${state.delivery==='Pick Up'?'selected':''}" data-delivery="Pick Up">📍 Pick Up (21km)</button><button type="button" class="choice ${state.delivery==='Delivery'?'selected':''}" data-delivery="Delivery">🛵 Delivery</button></div></section>
+				<section class="checkout-card"><h2>Payment Method</h2><div class="radio-list">${['Cash on Delivery','Bank Transfer','Gcash'].map(method=>`<label><input type="radio" name="payment" value="${method}" ${state.payment===method?'checked':''}>${method}</label>`).join('')}</div></section>
+				<section class="checkout-card"><h2>Signed in as</h2><p>${escapeHtml(state.user?.name||'')}</p><p>${escapeHtml(state.user?.email||'')}</p><label class="field">Delivery address<input form="checkout-form" name="address" maxlength="200" required placeholder="Street, barangay, city"></label></section>
+				<div class="footer-action"><button class="primary-btn" type="submit">Place Order</button></div></form>`;
+			main.querySelectorAll('[data-delivery]').forEach(button => button.onclick = () => {state.delivery=button.dataset.delivery;renderCheckout();});
+			main.querySelectorAll('[name="payment"]').forEach(radio => radio.onchange = () => state.payment=radio.value);
+			document.getElementById('checkout-form').onsubmit = async event => {
+				event.preventDefault();
+				const form = new FormData(event.currentTarget);
+				try {
+					const order = await api('/api/orders',{customer:state.user?.name||'',email:state.user?.email||'',address:form.get('address'),items:Object.entries(state.checkoutItems).map(([id,qty])=>`${id}:${qty}`).join(','),delivery:state.delivery,payment:state.payment});
+					state.latestOrderId = order.orderId;
+					state.checkoutItems={};
+					state.cart={};
+					await refresh();
+					setView('success');
+				} catch(error) { notify(error.message); }
+			};
+		}
+		function renderSuccess() {
+			header('');
+			main.innerHTML = `<div class="success-card"><div class="success-mark">◉</div><h2>All Done</h2><p>Your order ${escapeHtml(state.latestOrderId || '')} is being prepared.</p><button class="primary-btn" id="success-back">Go back</button></div>`;
+			document.getElementById('success-back').onclick=()=>setView('orders');
+		}
+		function renderBuilder() {
+			const step = state.builderStep;
+			const titles = ['Choose Flowers','Choose Your Colors','Choose Alignment','Choose Wrapper','Choose Ribbon','Add Message'];
+			header(titles[step-1],'home');
+			const progress = `<div class="progress">${[1,2,3,4,5,6].map(number=>`<span class="${number===step?'active':''}">${number}</span>`).join('')}</div>`;
+			let options = '';
+			if(step===1) {
+				const flowers=[...new Set(state.products.map(product=>product.flowerType || product.category))];
+				options=`<div class="small-label">Choose Flowers</div><p>Pick a fresh flower type for your bouquet</p><div class="builder-options">${flowers.map(name=>`<button class="builder-option ${state.builder.flower===name?'selected':''}" data-option="${escapeHtml(name)}"><span class="bloom">${flowerEmoji[name]||'💐'}</span><span>${escapeHtml(name)}</span></button>`).join('')}</div>`;
+			} else if(step===2) {
+				const offers=state.products.filter(product=>(product.flowerType||product.category)===state.builder.flower && product.stock>0 && product.handmade);
+				const colors=[...new Set(offers.map(product=>product.flowerColor))];
+				const matching=offers.filter(product=>product.flowerColor===state.builder.color);
+				options=`<div class="small-label">Choose Your Colors</div><p>Choose a color available for ${escapeHtml(state.builder.flower)}. The flowers below match your selection.</p><div class="flower-color-filters">${colors.map(color=>`<button class="flower-color ${state.builder.color===color?'active':''}" data-option="${escapeHtml(color)}"><i style="--swatch:${colorSwatches[color]||'#fff'}"></i>${escapeHtml(color)}</button>`).join('')}</div><div class="product-grid">${matching.length?matching.map(product=>`<button class="product-card ${state.builder.productId===product.id?'selected':''}" type="button" data-builder-product="${escapeHtml(product.id)}"><span class="product-photo" style="background:linear-gradient(135deg,${escapeHtml(flowerTint(product.flowerColor))},#fff)"><span class="bloom">${bloomFor(product)}</span></span><span class="product-title">${escapeHtml(product.name)}</span><span class="product-price">${peso(product.priceCents)}</span><span class="product-foot">${escapeHtml(product.flowerColor)} · ${escapeHtml(product.maker)}</span></button>`).join(''):'<div class="empty">No fresh flowers of this type and color are listed yet. Choose another flower or color.</div>'}</div><p class="google-hint">${state.builder.productId?'Flower selected.':'Select one of the matching flowers to continue.'}</p>`;
+			} else if(step===3) {
+				const sizes=[['💐','Small (1-3 stem)'],['💐','Medium (6-10 stems)'],['💐','Large'],['💐','Mixed']];
+				options=`<div class="builder-options">${sizes.map(([icon,name])=>`<button class="builder-option ${state.builder.alignment===name?'selected':''}" data-option="${name}"><span class="bloom">${icon}</span><span>${name}</span></button>`).join('')}</div>`;
+			} else if(step===4 || step===5) {
+				const values=step===4?['Pink','Red','Purple','Brown']:['Pink','Rose','Floral','Blue'];
+				options=`<div class="builder-options">${values.map((name,index)=>`<button class="builder-option ${state.builder[step===4?'wrapper':'ribbon']===name?'selected':''}" data-option="${name}"><span class="bloom">${['🎀','💐','🎁','🌹'][index]}</span></button>`).join('')}</div><div class="builder-label">${values.map(name=>`<button class="pill" data-option="${name}">${name}</button>`).join('')}</div>`;
+			} else {
+				options=`<div class="small-label">Note:</div><textarea class="note-box" id="builder-message" placeholder="Write a special note for your bouquet...">${escapeHtml(state.builder.message)}</textarea><div class="small-label">QR:</div><div style="font-size:55px;color:var(--gold)">▦</div><h3>Message Style</h3><div class="style-grid">${['Classic','Cute','Elegant'].map(name=>`<button class="style-choice ${state.builder.style===name?'selected':''}" data-style="${name}">${name}</button>`).join('')}</div>`;
+			}
+			main.innerHTML=`<div class="content tight"><div class="progress-title"><span style="font-size:13px;color:var(--muted)">Step ${step} of 6</span></div>${progress}${options}</div>`;
+			main.querySelectorAll('[data-option]').forEach(button=>button.onclick=()=>{const value=button.dataset.option;if(step===1){state.builder.flower=value;state.builder.color='';state.builder.productId='';}else state.builder[step===2?'color':step===3?'alignment':step===4?'wrapper':'ribbon']=value;renderBuilder();});
+			main.querySelectorAll('[data-builder-product]').forEach(button=>button.onclick=()=>{state.builder.productId=button.dataset.builderProduct;renderBuilder();});
+			main.querySelectorAll('[data-style]').forEach(button=>button.onclick=()=>{state.builder.style=button.dataset.style;renderBuilder();});
+			main.insertAdjacentHTML('beforeend',`<div class="builder-footer"><button class="back-btn" id="builder-back">❮ &nbsp; Back</button><button class="next-btn" id="builder-next">Next</button></div>`);
+			document.getElementById('builder-back').onclick=()=>{if(step===1)setView('home');else{if(step===6)state.builder.message=document.getElementById('builder-message').value;state.builderStep--;renderBuilder();}};
+			document.getElementById('builder-next').onclick=()=>{if(step===2&&!state.builder.productId)return notify('Select a flower listing in your chosen color first.');if(step===6)state.builder.message=document.getElementById('builder-message').value;if(step<6){state.builderStep++;renderBuilder();}else{const product=state.products.find(item=>item.id===state.builder.productId);if(!product)return notify('Choose your flower type and color before continuing.');state.checkoutItems={[product.id]:1};setView('checkout');}};
+		}
+		function renderSellerDashboard() {
+			header('Seller Dashboard');
+			const revenue=state.orders.reduce((sum,order)=>sum+order.totalCents,0);
+			const pending=state.orders.filter(order=>['Pending','New'].includes(order.status)).length;
+			const myProducts=state.products.filter(product=>product.ownedByCurrentSeller);
+			const metrics=[['＄','Total Sales',peso(revenue),''],['▤','Total Orders',state.orders.length,''],['♟','Average Order Value',peso(state.orders.length?Math.round(revenue/state.orders.length):0),''],['🌹','My Fresh Flowers',myProducts.length,'']];
+			main.innerHTML=`<div class="section-title"><div><strong style="color:var(--gold-dark)">Seller’s Sales Overview</strong><small style="display:block;color:#888">Welcome, ${escapeHtml(state.user?.name||'seller')}</small></div><button class="header-action" id="seller-account">Account</button></div><div class="metric-grid">${metrics.map(([icon,name,value,change])=>`<div class="metric"><span class="metric-icon">${icon}</span><small>${name}</small><strong>${value}</strong>${change?`<small style="color:#36a65a">${change}</small>`:''}</div>`).join('')}</div><section class="chart"><div class="section-title"><h2>▥ &nbsp; Sales Performance</h2><button class="pill active">Monthly</button></div><div class="chart-bars">${[['Jan',38],['Feb',48],['Mar',66],['Apr',82]].map(([month,height])=>`<div class="bar" data-month="${month}" style="height:${height}%"></div>`).join('')}</div></section><div class="section-title"><h2>My Flower Listings</h2></div><div class="seller-card">${myProducts.length?myProducts.map((product,index)=>`<div class="seller-row"><span class="seller-thumb">${bloomFor(product)}</span><span>${escapeHtml(product.name)}<small>${escapeHtml(product.flowerColor)} ${escapeHtml(product.category)} · ${product.stock} fresh stems</small></span><strong>${peso(product.priceCents)}</strong></div>`).join(''):'<p class="google-hint">You have not listed any flowers yet.</p>'}</div><button class="primary-btn" id="add-first-flower">＋ &nbsp; Add a fresh flower listing</button><button class="secondary-btn" id="manage-orders" style="margin-top:10px">Manage ${pending} pending orders</button>`;
+			document.getElementById('manage-orders').onclick=()=>setView('seller-orders');
+			document.getElementById('add-first-flower').onclick=()=>setView('add-product');
+			document.getElementById('seller-account').onclick=()=>setView('seller-profile');
+		}
+		function renderSellerProducts() {
+			header('Products');
+			const mine=state.products.filter(product=>product.ownedByCurrentSeller);
+			main.innerHTML=`<div class="section-title"><div><h2>My Fresh Flowers</h2><small>${mine.length} listings</small></div><button class="header-action" id="add-product">＋ Add flowers</button></div><div class="seller-card">${mine.length?mine.map(product=>`<div class="seller-row"><span class="seller-thumb" style="background:linear-gradient(135deg,${escapeHtml(product.color)},#fff)">${bloomFor(product)}</span><span>${escapeHtml(product.name)}<small>${escapeHtml(product.flowerColor)} ${escapeHtml(product.flowerType)} · ${escapeHtml(product.freshness)} · ${product.stock} stems</small></span><span>${peso(product.priceCents)}<br><button class="outline-btn" data-delete="${escapeHtml(product.id)}">Remove</button></span></div>`).join(''):'<p class="google-hint">Your flower listings will appear here after you add your first fresh, handmade product.</p>'}</div>`;
+			document.getElementById('add-product').onclick=()=>setView('add-product');
+			main.querySelectorAll('[data-delete]').forEach(button=>button.onclick=async()=>{if(!confirm('Remove this product?'))return;try{await api('/api/seller/products/delete',{id:button.dataset.delete});await refresh();notify('Product removed.');}catch(error){notify(error.message);}});
+		}
+		function renderAddProduct() {
+			header('Add Product','seller-products');
+			const types=['Rose','Tulip','Sunflower','Lily','Carnation','Daisy','Orchid','Mixed Bouquet'];
+			const colors=Object.keys(colorSwatches).filter(color=>color!=='Mixed');
+			main.innerHTML=`<form class="form" id="add-product-form"><div style="display:grid;place-items:center;height:155px;border:1px dashed #555;border-radius:25px;background:white;font-size:65px;color:var(--gold)">🌹<small style="font-size:13px;color:#888">Fresh flowers only · Handmade by you</small></div><label>Shop name<input name="shopName" maxlength="80" required placeholder="Your flower shop"></label><label>Flower listing name<input name="name" required maxlength="80" placeholder="e.g. Fresh Pink Rose Bouquet"></label><label>Flower type<select name="flowerType" required>${types.map(type=>`<option>${type}</option>`).join('')}</select></label><label>Flower color<select name="flowerColor" required>${colors.map(color=>`<option>${color}</option>`).join('')}</select></label><label>Price (PHP)<input name="price" type="number" min="0.01" step="0.01" required placeholder="₱ 00.00"></label><label>Freshness details<select name="freshness" required><option>Harvested today</option><option>Fresh cut · 1 day</option><option>Fresh cut · 2 days</option><option>Freshly arranged today</option></select></label><label>Fresh stock (stems or bouquets)<input name="stock" type="number" min="1" max="9999" value="5" required></label><label>Product description<textarea name="description" required maxlength="500" placeholder="Flower condition, stem count, bouquet contents, care tips..."></textarea></label><label>Seller contact number<input name="sellerPhone" type="tel" maxlength="30" required placeholder="09xx xxx xxxx"></label><label>Seller location<input name="sellerLocation" maxlength="100" required placeholder="City, barangay"></label><label style="display:flex;align-items:center;gap:8px"><input name="handmade" type="checkbox" value="true" checked required style="width:auto">This bouquet is arranged by hand with fresh flowers</label><input type="hidden" name="emoji" value="🌹"><input type="hidden" name="color" value="${flowerTint(colors[0])}"><button class="primary-btn" type="submit">Publish Fresh Flowers</button></form>`;
+			const typeSelect=main.querySelector('[name="flowerType"]');
+			typeSelect.onchange=()=>main.querySelector('[name="emoji"]').value=flowerEmoji[typeSelect.value]||'💐';
+			main.querySelector('[name="flowerColor"]').onchange=event=>main.querySelector('[name="color"]').value=colorTints[event.target.value]||'#f1d8dc';
+			document.getElementById('add-product-form').onsubmit=async event=>{event.preventDefault();const data=Object.fromEntries(new FormData(event.currentTarget));try{await api('/api/seller/products',data);await refresh();setView('seller-products');notify('Fresh flower listing published.');}catch(error){notify(error.message);}};
+		}
+		function renderSellerOrders() {
+			header('Orders');
+			const statuses=['Pending','Preparing','Out for delivery','Delivered'];
+			main.innerHTML=state.orders.length?state.orders.slice().reverse().map(order=>`<article class="seller-card"><div class="seller-row" style="grid-template-columns:1fr auto"><span><strong>Order #${escapeHtml(order.id)}</strong><small>${escapeHtml(order.customer)} · ${escapeHtml(order.email)}</small></span><span>${peso(order.totalCents)}</span></div><p>${order.lines.map(line=>`${escapeHtml(line.emoji)} ${escapeHtml(line.name)} × ${line.quantity}`).join(', ')}</p><div class="detail-line"><span class="order-state">${escapeHtml(order.status)}</span><select data-status="${escapeHtml(order.id)}" aria-label="Update status" class="header-action">${statuses.map(status=>`<option ${order.status===status?'selected':''}>${status}</option>`).join('')}</select></div><button class="outline-btn" data-message="${escapeHtml(order.customer)}">Message Customer</button></article>`).join(''):'<div class="empty">No orders yet. New customer orders will appear here.</div>';
+			main.querySelectorAll('[data-status]').forEach(select=>select.onchange=async()=>{try{await api('/api/seller/orders/status',{id:select.dataset.status,status:select.value});await refresh();notify('Order status updated.');}catch(error){notify(error.message);}});
+			main.querySelectorAll('[data-message]').forEach(button=>button.onclick=()=>setView('messages'));
+		}
+		function renderProfile() {
+			header('Profile',state.mode==='seller'?'seller-dashboard':'home');
+			main.innerHTML=`<div class="profile-banner"></div><section class="profile-summary">${avatarMarkup(state.user,'U')}<div><strong style="font-size:19px">${escapeHtml(state.user?.name||'')}</strong><small style="display:block;color:#858585">${escapeHtml(state.user?.email||'')}</small><span style="color:#886319">Google account · ${state.user?.role==='customer'?'Flower customer':'Flower seller'}</span></div><div class="profile-stats"><div><strong>${state.orders.length}</strong>Orders</div><div><strong>${state.products.filter(product=>product.ownedByCurrentSeller).length}</strong>My flower listings</div><div><strong>🌸</strong>Handmade</div></div></section><div class="profile-links">${[['▦','Seller Studio','List and sell fresh flowers','seller-dashboard'],['▣','My Orders','Track your flower orders','orders']].map(([icon,title,sub,view])=>`<div class="profile-link"><span class="link-icon">${icon}</span><span>${title}<small>${sub}</small></span><button data-profile-view="${view}">›</button></div>`).join('')}</div><button class="primary-btn" style="margin-top:16px;background:white;color:var(--gold);border:1px solid var(--gold)" id="logout">Sign Out</button>`;
+			main.querySelectorAll('[data-profile-view]').forEach(button=>button.onclick=()=>button.dataset.profileView.startsWith('seller-')?setView(button.dataset.profileView):button.dataset.profileView==='orders'?setView('orders'):notify(`${button.dataset.profileView} is coming soon.`));
+			document.getElementById('logout').onclick=async()=>{try{await api('/api/auth/logout',{});state.user=null;state.orders=[];state.mode='shop';setView('home');notify('You are signed out.');}catch(error){notify(error.message);}};
+		}
+		function renderSellerProfile() {
+			header('Seller Profile','seller-dashboard');
+			main.innerHTML=`<div class="profile-banner"></div><section class="profile-summary">${avatarMarkup(state.user,'F')}<div><strong style="font:23px Georgia,serif">${escapeHtml(state.profile.shopName || '')}</strong><small style="display:block">${escapeHtml(state.user?.name||'')}</small><span style="color:var(--gold)">Signed in with Google</span></div><div class="profile-stats"><div><strong>${state.products.filter(product=>product.ownedByCurrentSeller).length}</strong>My Flowers</div><div><strong>${state.orders.length}</strong>My Orders</div><div><strong>🌸</strong>Fresh</div></div></section><section class="profile-card"><h2>Shop Details</h2><form class="form" id="seller-profile-form"><label>Shop name<input name="shopName" maxlength="80" required value="${escapeHtml(state.profile.shopName || '')}"></label><label>Your name<input name="owner" maxlength="80" required value="${escapeHtml(state.profile.owner || state.user?.name || '')}"></label><label>Contact email<input name="email" type="email" maxlength="254" required value="${escapeHtml(state.profile.email || state.user?.email || '')}"></label><button class="primary-btn" type="submit">Save Profile</button></form></section><button class="primary-btn" style="background:white;color:var(--gold);border:1px solid var(--gold)" id="switch-shop">Back to customer shop</button><button class="secondary-btn" style="margin-top:10px" id="seller-logout">Sign Out</button>`;
+			document.getElementById('seller-profile-form').onsubmit=async event=>{event.preventDefault();const values=Object.fromEntries(new FormData(event.currentTarget));try{await api('/api/seller/profile',values);await refresh();setView('seller-profile');notify('Shop profile saved.');}catch(error){notify(error.message);}};
+			document.getElementById('switch-shop').onclick=()=>setView('home');
+			document.getElementById('seller-logout').onclick=async()=>{try{await api('/api/auth/logout',{});state.user=null;state.orders=[];state.mode='shop';setView('home');notify('You are signed out.');}catch(error){notify(error.message);}};
+		}
+		function renderMessages() {
+			header('Messages','seller-dashboard');
+			main.innerHTML=`<div class="message-person">${avatarMarkup(state.user,'U')}<span>${escapeHtml(state.user?.name||'')}</span></div>${state.messages.length?state.messages.map(message=>`<div class="message ${message.mine?'mine':''}">${escapeHtml(message.text)}</div>`).join(''):'<div class="empty">Your customer messages will appear here.</div>'}`;
+		}
+		function renderOrderDetail() {
+			const order=state.selectedOrder;
+			header(`Order #${order?.id||''}`,'orders');
+			if(!order)return setView('orders');
+			const subtotal=order.subtotalCents ?? order.totalCents;
+			const protection=order.protectionCents ?? 0;
+			const delivery=order.deliveryFeeCents ?? 0;
+			main.innerHTML=`<section class="seller-card" style="margin-top:25px"><div class="progress">${['Pending','Preparing','Out for delivery','Delivered'].map((status,index)=>`<span class="${['Pending','Preparing','Out for delivery','Delivered'].indexOf(order.status)>=index?'active':''}">${['◷','▣','🛵','♧'][index]}</span>`).join('')}</div><div class="detail-line"><small>Pending</small><small>Preparing</small><small>Out for delivery</small><small>Delivered</small></div></section><section class="seller-card"><h3>${escapeHtml(order.customer)}</h3><p>${escapeHtml(order.email)}</p><p>${escapeHtml(order.address)}</p><hr>${order.lines.map(line=>`<div class="detail-line"><span>${escapeHtml(line.emoji)} ${escapeHtml(line.name)} × ${line.quantity}</span><span>${peso(line.priceCents*line.quantity)}</span></div>`).join('')}<p>With: QR message &nbsp; ▦</p></section><section class="seller-card"><div class="summary-line"><span>Sub Total</span><span>${peso(subtotal)}</span></div><div class="summary-line"><span>Protection Seal</span><span>${peso(protection)}</span></div><div class="summary-line"><span>Delivery Fee</span><span>${peso(delivery)}</span></div><hr><div class="summary-line total"><span>TOTAL</span><span>${peso(order.totalCents)}</span></div></section><button class="primary-btn" id="order-message">Message Customer</button>`;
+			document.getElementById('order-message').onclick=()=>setView('messages');
+		}
+		function renderShopProfile() {
+			const selected=state.selected;
+			const listings=selected?state.products.filter(product=>product.maker===selected.maker):[];
+			header(selected?.maker||'Flower Shop','search');
+			main.innerHTML=selected?`<section class="profile-summary">${avatarMarkup({name:selected.sellerName},'F')}<div><strong style="font:23px Georgia,serif">${escapeHtml(selected.maker)}</strong><small style="display:block">📍 ${escapeHtml(selected.sellerLocation)}</small><small>${escapeHtml(selected.sellerName)}</small></div></section><div class="section-title"><h2>Flower Listings</h2></div><div class="product-grid">${listings.map(productCard).join('')}</div>`:'<div class="empty">Open a flower listing to view its shop.</div>';
+			main.querySelectorAll('[data-product]').forEach(button=>button.onclick=()=>openProduct(button.dataset.product));
+		}
+		function renderPromos() {
+			header('Promos & Rewards','home');
+			main.innerHTML=`${[['DISCOUNT','10% OFF','Handmade Bouquets','🌹'],['LOYALTY','Double Points Weekend','Earn more with every purchase!','🎁'],['BUNDLE DEAL','Buy 2, Get 50% OFF','Selected items','💐'],['EXCLUSIVE','₱50 OFF','Your Next Order','🎀']].map(([tag,title,sub,emoji])=>`<div class="promo" style="margin:12px 0"><span class="promo-tag">${tag}</span><h2>${title}</h2><p>${sub}</p><span style="position:absolute;right:20px;top:50px;font-size:72px">${emoji}</span></div>`).join('')}`;
+		}
+		function render() {
+			topbar.classList.remove('home-top');
+			main.className='content';
+			drawNav();
+			const screens={
+				signin:renderSignIn, home:renderHome, search:renderSearch, details:renderDetails, orders:renderOrders,
+				checkout:renderCheckout, cart:renderCart, success:renderSuccess, builder:renderBuilder,
+				'seller-dashboard':renderSellerDashboard, 'seller-products':renderSellerProducts,
+				'add-product':renderAddProduct, 'seller-orders':renderSellerOrders,
+				'seller-profile':renderSellerProfile, profile:renderProfile, messages:renderMessages,
+				'order-detail':renderOrderDetail, 'shop-profile':renderShopProfile, promos:renderPromos
+			};
+			(screens[state.view] || renderHome)();
+			drawNav();
+		}
+		if ('serviceWorker' in navigator && window.isSecureContext) {
+			window.addEventListener('load', () => {
+				navigator.serviceWorker.register('/service-worker.js').catch(error => {
+					console.error('The app could not enable offline support.', error);
+				});
+			}, {once:true});
+		}
+		refresh();
+	</script>
+</body>
+</html>
