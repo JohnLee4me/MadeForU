@@ -1,8 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-  <rect width="512" height="512" rx="112" fill="#f7f4ec"/>
-  <circle cx="256" cy="228" r="151" fill="none" stroke="#b48617" stroke-width="8"/>
-  <path d="M162 323V164h36l59 91 59-91h35v159h-38V225l-56 83-56-83v98z" fill="#8c6912"/>
-  <path d="M257 351c49-22 80-68 87-131-40 7-68 25-87 55-17 28-17 51 0 76z" fill="#b48617"/>
-  <path d="M244 334c-17-33-46-53-88-60 12 41 36 66 75 78z" fill="#2c271d"/>
-  <text x="256" y="431" text-anchor="middle" font-family="Georgia,serif" font-size="54" fill="#6d5011">MadeForU</text>
-</svg>
