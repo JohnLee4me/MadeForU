@@ -1,0 +1,14 @@
+[
+  {
+    "relation": [
+      "delegate_permission/common.handle_all_urls"
+    ],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.madeforu.app",
+      "sha256_cert_fingerprints": [
+        "E5:F6:4B:A2:C2:AC:0E:29:AA:16:89:D9:DA:98:67:94:ED:2C:2A:C4:B1:FE:7B:AB:1F:BB:37:30:10:CC:AB:EE"
+      ]
+    }
+  }
+]
