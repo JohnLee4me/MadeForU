@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: madeforu
+    runtime: docker
+    plan: free
+    healthCheckPath: /health
+    envVars:
+      - key: PORT
+        value: 10000
+      - key: GOOGLE_CLIENT_ID
+        sync: false
+      - key: PAYMONGO_SECRET_KEY
+        sync: false
+      - key: MADEFORU_PUBLIC_URL
+        value: https://madeforu-1.onrender.com
